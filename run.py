@@ -95,7 +95,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print('*: Please, check arguments passed')
         show_help(program_name=sys.argv[0])
-        sys.exit(1)
+        sys.exit(ERROR_INVALID_ARGUMENT_COUNT)
 
     parsed_dict = parse_arguments(argv=sys.argv[1:],
                                   program_name=sys.argv[0])
@@ -125,4 +125,4 @@ if __name__ == "__main__":
                    create_extra_images=parsed_dict['create_extra_images'])
     else:
         show_help(program_name=sys.argv[0])
-        sys.exit(2)
+        sys.exit(ERROR_NO_ACTION_SELECTED)
