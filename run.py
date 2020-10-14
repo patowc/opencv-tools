@@ -63,8 +63,8 @@ from engine.recognize import *
 
 
 if __name__ == "__main__":
-    is_raspbian = False
-    is_arm = False
+    IS_RASPBIAN = False
+    IS_ARM = False
 
     sysname, nodename, release, version, machine = os.uname()
     nodename = nodename.lower()
@@ -77,7 +77,7 @@ if __name__ == "__main__":
                                                                        machine))
 
     if nodename == 'raspberrypi' or nodename == 'raspbian':
-        is_raspbian = True
+        IS_RASPBIAN = True
         if DEBUG is True:
             print('==> IS raspbian environment')
     else:
@@ -85,7 +85,7 @@ if __name__ == "__main__":
             print('==> Not in raspbian environment')
 
     if 'arm' in machine.lower():
-        is_arm = True
+        IS_ARM = True
         if DEBUG is True:
             print('==> IS ARM architecture')
     else:
@@ -112,12 +112,12 @@ if __name__ == "__main__":
     elif parsed_dict['wanna_recognize'] is True:
         cv_recognize(images_dir=parsed_dict['output_dir'],
                      device_id=parsed_dict['did'],
-                     is_raspbian=is_raspbian, is_arm=is_arm)
+                     is_raspbian=IS_RASPBIAN, is_arm=IS_ARM)
     elif parsed_dict['wanna_capture'] is True:
         do_capture(user=parsed_dict['user'],
                    device_id=parsed_dict['did'],
-                   is_raspbian=is_raspbian,
-                   is_arm=is_arm,
+                   is_raspbian=IS_RASPBIAN,
+                   is_arm=IS_ARM,
                    silent_mode=parsed_dict['silent'],
                    base_images_dir=parsed_dict['output_dir'],
                    limit=parsed_dict['limit'],
