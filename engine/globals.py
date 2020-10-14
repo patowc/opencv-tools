@@ -90,12 +90,12 @@ def parse_arguments(argv, program_name='application'):
     except getopt.GetoptError as e:
         print('* Error in arguments: [%s]' % str(e))
         show_help(program_name=program_name)
-        sys.exit(2)
+        sys.exit(ERROR_PARSING_ARGUMENTS)
 
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             show_help(program_name=program_name)
-            sys.exit()
+            sys.exit(ERROR_OK)
         elif opt in ("-c", "--capture"):
             parsed_dict['wanna_capture'] = True
         elif opt in ("-s", "--silent"):
@@ -128,7 +128,7 @@ def parse_arguments(argv, program_name='application'):
     if parsed_dict['wanna_capture'] is True and not parsed_dict['user']:
         print('* User is required when capturing')
         show_help(program_name=program_name)
-        sys.exit()
+        sys.exit(ERROR_USER_IS_REQUIRED_WHEN_CAPTURING)
 
     if parsed_dict['did'] == 0:
         print('** IMPORTANT: set the default capture device id to 0: /dev/video0. This may fail if the video capture device is not this one.')
@@ -139,7 +139,7 @@ def parse_arguments(argv, program_name='application'):
 def cv_set_recognition_algorithm(algorithm=1):
     if algorithm < 1 or algorithm > 3:
         print("WARNING: face algorithm must be in the range 1-3")
-        sys.exit(1)
+        sys.exit(ERROR_INVALID_RECOGNITION_ALGORITHM)
 
     RECOGNITION_ALGORITHM = algorithm
     # Threshold for the confidence of a recognized face before it's
@@ -228,7 +228,7 @@ def open_images_status_file(images_status_file=IMAGES_STATUS_FILE, base_images_d
             fp = open(image_status_file, 'rt')
         except Exception as e:
             print('open_images_status_file: exception reading file -> exception [%s]' % e)
-            sys.exit(1)
+            sys.exit(ERROR_READING_STATUS_FILE)
     else:
         # Create if directory does not exist, ignore either.
         Path(base_images_dir).mkdir(parents=True, exist_ok=True)
@@ -256,7 +256,7 @@ def open_user_id_file(user, base_images_dir=BASE_CAPTURE_DIRECTORY, last_user_id
             fp = open(user_id_file, 'rt')
         except Exception as e:
             print('open_user_id_file: exception reading file -> exception [%s]' % e)
-            sys.exit(1)
+            sys.exit(ERROR_READING_USER_ID_FILE)
     else:
         user_id = last_user_id + 1
         # Create if directory does not exist, ignore either.
@@ -276,8 +276,8 @@ def open_user_id_file(user, base_images_dir=BASE_CAPTURE_DIRECTORY, last_user_id
     try:
         user_id = int(user_id)
     except Exception as e:
-        print('open_user_id_file: exception reading file -> exception [%s]' % e)
-        sys.exit(1)
+        print('open_user_id_file: exception in user_id. Maybe not integer -> exception [%s]' % e)
+        sys.exit(ERROR_USER_ID_IS_NOT_INTEGER)
 
     if user_id == 0:
         print('open_user_id_file: user_id cannot be 0.')
