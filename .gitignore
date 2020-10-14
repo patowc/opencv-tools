@@ -130,3 +130,10 @@ dmypy.json
 
 # Pycharm
 .idea/
+
+# Potential images directories to skip
+images/
+image/
+img/
+i/
+training_data/
