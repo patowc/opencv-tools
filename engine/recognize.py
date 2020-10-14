@@ -57,7 +57,7 @@ def cv_recognize(images_dir=BASE_CAPTURE_DIRECTORY, device_id=0, is_raspbian=Fal
         except Exception as e:
             print('CRITICAL: we are in Raspberry PI and cannot import picamera')
             print('Exception: [%s]' % e)
-            sys.exit(-1)
+            sys.exit(ERROR_PICAMERA_IMPORT_ERROR_IN_RPI)
 
         camera.resolution = (640, 480)
         person_cascade = cv2.CascadeClassifier('/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_default.xml')
