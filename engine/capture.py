@@ -37,7 +37,7 @@ def do_capture(user,
 
     user_id = open_user_id_file(user=user, base_images_dir=base_images_dir, last_user_id=last_user_id)
     if user_id == 0:
-        sys.exit(5)
+        sys.exit(ERROR_INVALID_USER_ID)
     else:
         print('=> Update status to new user_id=[%d]' % user_id)
         status['user_count'] = user_id
@@ -53,7 +53,7 @@ def do_capture(user,
         except Exception as e:
             print('CRITICAL: we are in Raspberry PI and cannot import picamera')
             print('Exception: [%s]' % e)
-            sys.exit(-1)
+            sys.exit(ERROR_PICAMERA_IMPORT_ERROR_IN_RPI)
 
         camera.resolution = (640, 480)
         face_cascade = cv2.CascadeClassifier(
