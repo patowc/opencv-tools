@@ -109,8 +109,6 @@ if __name__ == "__main__":
         print('CRITICAL: something critical happened reading images status file. EXIT.')
         sys.exit(-1)
 
-    POSITIVE_THRESHOLD = cv_set_recognition_algorithm(algorithm=1)
-
     if parsed_dict['wanna_train'] is True:
         do_train(base_images_dir=parsed_dict['output_dir'],
                  recognizer_algorithm=parsed_dict['algorithm'])
