@@ -25,7 +25,8 @@ try:
 except Exception as e:
     CROP_WIDTH = 112
 
-# We
+# We can select the recognizer algorithm. Fisher is LDA (Linear Discrimination
+# Analysis).
 LBPH_RECOGNIZER = 1
 FISHER_RECOGNIZER = 2
 EIGEN_RECOGNIZER = 3
