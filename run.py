@@ -31,6 +31,10 @@ for different tools (for example, Magic Mirror 2 facial recognition ones).
            (a limit for the number of images to save. By default 0
            that means is unlimitted).
 
+        -a <algorithm number> || --algorithm=<algorithm number>
+           (the algorithm can be 1 to 3, corresponding to LBPH_RECOGNIZER,
+           FISHER_RECOGNIZER and EIGEN_RECOGNIZER).
+
         -s || --silent
            (do not show the positive image on screen)
 
@@ -108,10 +112,12 @@ if __name__ == "__main__":
     POSITIVE_THRESHOLD = cv_set_recognition_algorithm(algorithm=1)
 
     if parsed_dict['wanna_train'] is True:
-        do_train(base_images_dir=parsed_dict['output_dir'])
+        do_train(base_images_dir=parsed_dict['output_dir'],
+                 recognizer_algorithm=parsed_dict['algorithm'])
     elif parsed_dict['wanna_recognize'] is True:
         cv_recognize(images_dir=parsed_dict['output_dir'],
                      device_id=parsed_dict['did'],
+                     recognizer_algorithm=parsed_dict['algorithm'],
                      is_raspbian=IS_RASPBIAN, is_arm=IS_ARM)
     elif parsed_dict['wanna_capture'] is True:
         do_capture(user=parsed_dict['user'],
