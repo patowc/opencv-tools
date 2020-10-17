@@ -71,6 +71,7 @@ def parse_arguments(argv, program_name='application'):
     parsed_dict['silent'] = False
     parsed_dict['output_dir'] = BASE_CAPTURE_DIRECTORY
     parsed_dict['limit'] = 10
+    parsed_dict['algorithm'] = LBPH_RECOGNIZER
     parsed_dict['create_extra_images'] = True
     parsed_dict['wanna_capture'] = False
     parsed_dict['wanna_train'] = False
@@ -140,6 +141,9 @@ def parse_arguments(argv, program_name='application'):
                 print('* Algorithm passed was invalid [%s] (allowed 1, 2 or 3).' % str(parsed_dict['algorithm']))
                 show_help(program_name=program_name)
                 sys.exit(ERROR_ALGORITHM_VALUE_NOT_VALID)
+
+            if parsed_dict['algorithm'] == 2:
+                print('* Algorithm FISHER/LDA requires MORE THAN ONE DIFFERENT LABEL. Please, capture for at least two users')
         elif opt in ("-t", "--train"):
             parsed_dict['wanna_train'] = True
         elif opt in ("-r", "--recognize"):
