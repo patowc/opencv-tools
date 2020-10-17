@@ -317,13 +317,19 @@ def update_status(status, images_status_file=IMAGES_STATUS_FILE, base_images_dir
         fp.write(json.dumps(status))
 
 
-def cv_generate_recognizer(algorithm, threshold=cv2.THRESH_OTSU):
+def cv_generate_recognizer(algorithm, threshold=None):
+    final_threshold = 0
+    if threshold:
+        final_threshold = threshold
+    else:
+        final_threshold = cv_set_recognition_algorithm_treshold(algorithm=algorithm)
+
     if algorithm == 1:
-        return cv2.face.LBPHFaceRecognizer_create(threshold=threshold)
+        return cv2.face.LBPHFaceRecognizer_create(threshold=final_threshold)
     elif algorithm == 2:
-        return cv2.face.FisherFaceRecognizer_create(threshold=threshold)
+        return cv2.face.FisherFaceRecognizer_create(threshold=final_threshold)
     elif algorithm == 3:
-        return cv2.face.EigenFaceRecognizer_create(threshold=threshold)
+        return cv2.face.EigenFaceRecognizer_create(threshold=final_threshold)
     else:
         print("WARNING: face algorithm must be LBPH, Fisher or Eigen (1-3). See config.py.")
         return None
