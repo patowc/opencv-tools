@@ -160,12 +160,13 @@ def parse_arguments(argv, program_name='application'):
     return parsed_dict
 
 
-def cv_set_recognition_algorithm(algorithm=1):
+def cv_set_recognition_algorithm_treshold(algorithm=LBPH_RECOGNIZER):
+    POSITIVE_THRESHOLD_VALUE = 3000
+
     if algorithm < 1 or algorithm > 3:
         print("WARNING: face algorithm must be in the range 1-3")
         sys.exit(ERROR_INVALID_RECOGNITION_ALGORITHM)
 
-    RECOGNITION_ALGORITHM = algorithm
     # Threshold for the confidence of a recognized face before it's
     # considered a positive match.  Confidence values below this
     # threshold will be considered a positive match because the lower
