@@ -35,8 +35,12 @@ def show_help(program_name):
 
         -l <limit> || --limit=<limit>
            (a limit for the number of images to save. By default 0
-           that means is unlimitted).
-
+           that means is unlimited).
+           
+        -a <algorithm number> || --algorithm=<algorithm number>
+           (the algorithm can be 1 to 3, corresponding to LBPH_RECOGNIZER, 
+           FISHER_RECOGNIZER and EIGEN_RECOGNIZER).
+           
         -s || --silent
            (do not show the positive image on screen)
 
@@ -74,7 +78,7 @@ def parse_arguments(argv, program_name='application'):
 
     try:
         opts, args = getopt.getopt(argv,
-                                   "ctrshnu:d:o:l:",
+                                   "ctrshnu:d:o:l:a:",
                                    [
                                        "capture",
                                        "train",
@@ -85,7 +89,8 @@ def parse_arguments(argv, program_name='application'):
                                        "user=",
                                        "device_id=",
                                        "output=",
-                                       "limit="
+                                       "limit=",
+                                       "algorithm="
                                    ])
     except getopt.GetoptError as e:
         print('* Error in arguments: [%s]' % str(e))
@@ -111,6 +116,7 @@ def parse_arguments(argv, program_name='application'):
             except Exception as e:
                 print('* Device ID passed was invalid [%s]' % str(parsed_dict['did']))
                 show_help(program_name=program_name)
+                sys.exit(ERROR_DEVICE_ID_IS_NOT_INTEGER)
         elif opt in ("-o", "--output"):
             parsed_dict['output_dir'] = arg
         elif opt in ("-l", "--limit"):
@@ -121,6 +127,19 @@ def parse_arguments(argv, program_name='application'):
                 print('* Limit passed was invalid [%s]' % str(parsed_dict['limit']))
                 show_help(program_name=program_name)
                 sys.exit(ERROR_LIMIT_IS_NOT_INTEGER)
+        elif opt in ("-a", "--algorithm"):
+            parsed_dict['algorithm'] = arg
+            try:
+                parsed_dict['algorithm'] = int(parsed_dict['algorithm'])
+            except Exception as e:
+                print('* Algorithm passed was invalid [%s]' % str(parsed_dict['algorithm']))
+                show_help(program_name=program_name)
+                sys.exit(ERROR_ALGORITHM_IS_NOT_INTEGER)
+
+            if 3 < parsed_dict['algorithm'] < 1:
+                print('* Algorithm passed was invalid [%s] (allowed 1, 2 or 3).' % str(parsed_dict['algorithm']))
+                show_help(program_name=program_name)
+                sys.exit(ERROR_ALGORITHM_VALUE_NOT_VALID)
         elif opt in ("-t", "--train"):
             parsed_dict['wanna_train'] = True
         elif opt in ("-r", "--recognize"):
