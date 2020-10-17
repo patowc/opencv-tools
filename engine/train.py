@@ -6,7 +6,7 @@ from .config import *
 from .globals import *
 
 
-def do_train(base_images_dir=BASE_CAPTURE_DIRECTORY):
+def do_train(base_images_dir=BASE_CAPTURE_DIRECTORY, recognizer_algorithm=LBPH_RECOGNIZER):
     faces = []
     labels = []
 
@@ -39,11 +39,9 @@ def do_train(base_images_dir=BASE_CAPTURE_DIRECTORY):
         print("Total faces: [%d]" % face_count)
         print("Total labels: [%d]" % label_count)
 
-    #face_recognizer= cv2.createLBPHFaceRecognizer()
-    #face_recognizer = cv2.face.EigenFaceRecognizer_create()
-    #face_recognizer = cv2.face.FisherFaceRecognizer_create()
-
-    face_recognizer = cv2.face.LBPHFaceRecognizer_create()
+    face_recognizer = cv_generate_recognizer(algorithm=recognizer_algorithm)
+    if not face_recognizer:
+        raise Exception('do_train: invalid recognizer algorithm [%s]' % str(recognizer_algorithm))
     face_recognizer.train(np.array(faces), np.array(labels))
 
     face_recognizer.save(TRAINING_FILE)
