@@ -104,8 +104,9 @@ def cv_recognize(images_dir=BASE_CAPTURE_DIRECTORY,
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    print('MAX Distance/conf [%d]' % max_distance)
-    print('MIN Distance/conf [%d]' % min_distance)
+    if DEBUG is True:
+        print('MAX Distance/conf [%d]' % max_distance)
+        print('MIN Distance/conf [%d]' % min_distance)
 
     # When everything done, release the capture
     if is_raspberry is False:
