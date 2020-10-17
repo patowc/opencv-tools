@@ -114,12 +114,13 @@ def parse_arguments(argv, program_name='application'):
         elif opt in ("-o", "--output"):
             parsed_dict['output_dir'] = arg
         elif opt in ("-l", "--limit"):
-            limit = arg
+            parsed_dict['limit'] = arg
             try:
-                limit = int(limit)
+                parsed_dict['limit'] = int(parsed_dict['limit'])
             except Exception as e:
-                print('* Limit passed was invalid [%s]' % str(limit))
+                print('* Limit passed was invalid [%s]' % str(parsed_dict['limit']))
                 show_help(program_name=program_name)
+                sys.exit(ERROR_LIMIT_IS_NOT_INTEGER)
         elif opt in ("-t", "--train"):
             parsed_dict['wanna_train'] = True
         elif opt in ("-r", "--recognize"):
