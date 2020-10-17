@@ -38,9 +38,16 @@ def cv_detect_person(frame, person_cascade, recognizer, font_face=cv2.FONT_HERSH
     return frame, distance
 
 
-def cv_recognize(images_dir=BASE_CAPTURE_DIRECTORY, device_id=0, is_raspbian=False, is_arm=False):
+def cv_recognize(images_dir=BASE_CAPTURE_DIRECTORY,
+                 device_id=0,
+                 is_raspbian=False,
+                 is_arm=False,
+                 recognizer_algorithm=LBPH_RECOGNIZER):
     training_file = os.path.join(images_dir, TRAINING_FILE)
-    recognizer = cv2.face.LBPHFaceRecognizer_create()
+    recognizer = cv_generate_recognizer(algorithm=recognizer_algorithm)
+    if not recognizer:
+        raise Exception('cv_recognize: cannot set recognition algorithm [%s]' % str(recognizer_algorithm))
+
     recognizer.read(training_file)
     cap = None
     camera = None
@@ -107,27 +114,13 @@ def cv_recognize(images_dir=BASE_CAPTURE_DIRECTORY, device_id=0, is_raspbian=Fal
     cv2.destroyAllWindows()
 
 
-# def cv_recognizer(algorithm, thresh):
-#     model = None
-#     if is_cv3():
-#         # OpenCV version renamed the face module
-#         if algorithm == 1:
-#             model = cv2.createLBPHFaceRecognizer(threshold=thresh)
-#         elif algorithm == 2:
-#             model = cv2.face.createFisherFaceRecognizer(threshold=thresh)
-#         elif algorithm == 3:
-#             model = cv2.face.createEigenFaceRecognizer(threshold=thresh)
-#         else:
-#             print("WARNING: face algorithm must be in the range 1-3")
-#             sys.exit(1)
-#     else:
-#         if algorithm == 1:
-#             model = cv2.createLBPHFaceRecognizer(threshold=thresh)
-#         elif algorithm == 2:
-#             model = cv2.createFisherFaceRecognizer(threshold=thresh)
-#         elif algorithm == 3:
-#             model = cv2.createEigenFaceRecognizer(threshold=thresh)
-#         else:
-#             print("WARNING: face algorithm must be in the range 1-3")
-#             sys.exit(1)
-#     return model
+def cv_generate_recognizer(algorithm, threshold=cv2.THRESH_OTSU):
+    if algorithm == 1:
+        return cv2.face.LBPHFaceRecognizer_create(threshold=threshold)
+    elif algorithm == 2:
+        return cv2.face.FisherFaceRecognizer_create(threshold=threshold)
+    elif algorithm == 3:
+        return cv2.face.EigenFaceRecognizer_create(threshold=threshold)
+    else:
+        print("WARNING: face algorithm must be LBPH, Fisher or Eigen (1-3). See config.py.")
+        return None
