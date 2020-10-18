@@ -1,4 +1,4 @@
-import io
+import json
 
 import cv2
 
@@ -9,6 +9,7 @@ from .globals import *
 def do_train(base_images_dir=BASE_CAPTURE_DIRECTORY, recognizer_algorithm=LBPH_RECOGNIZER):
     faces = []
     labels = []
+    detectables_dict = {'unknown': 0}
 
     images_dir = base_images_dir
     TRAINING_FILE = os.path.join(images_dir, 'training.xml')
@@ -17,7 +18,7 @@ def do_train(base_images_dir=BASE_CAPTURE_DIRECTORY, recognizer_algorithm=LBPH_R
 
     dirs = os.listdir(images_dir)
     for user_dir in dirs:
-        if user_dir == 'status.json' or user_dir == 'training.xml':
+        if user_dir == 'status.json' or user_dir == 'training.xml' or user_dir == 'detectables.json':
             continue
 
         user_dir_full_path = os.path.join(images_dir, user_dir)
@@ -33,6 +34,8 @@ def do_train(base_images_dir=BASE_CAPTURE_DIRECTORY, recognizer_algorithm=LBPH_R
             faces.append(image)
             labels.append(user_id)
 
+            detectables_dict[user_dir] = user_id
+
     face_count = len(faces)
     label_count = len(labels)
     if DEBUG is True:
@@ -45,3 +48,9 @@ def do_train(base_images_dir=BASE_CAPTURE_DIRECTORY, recognizer_algorithm=LBPH_R
     face_recognizer.train(np.array(faces), np.array(labels))
 
     face_recognizer.save(TRAINING_FILE)
+
+    # Create a JSON file with labels and associated id
+    detectables_json = os.path.join(base_images_dir, 'detectables.json')
+    fp = open(detectables_json, 'wt')
+    fp.write(json.dumps(detectables_dict))
+    fp.close()
