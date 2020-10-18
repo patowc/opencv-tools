@@ -49,8 +49,4 @@ def do_train(base_images_dir=BASE_CAPTURE_DIRECTORY, recognizer_algorithm=LBPH_R
 
     face_recognizer.save(TRAINING_FILE)
 
-    # Create a JSON file with labels and associated id
-    detectables_json = os.path.join(base_images_dir, 'detectables.json')
-    fp = open(detectables_json, 'wt')
-    fp.write(json.dumps(detectables_dict))
-    fp.close()
+    generate_detectables_json(detectables=detectables_dict)
