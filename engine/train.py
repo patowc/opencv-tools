@@ -49,4 +49,4 @@ def do_train(base_images_dir=BASE_CAPTURE_DIRECTORY, recognizer_algorithm=LBPH_R
 
     face_recognizer.save(TRAINING_FILE)
 
-    generate_detectables_json(detectables=detectables_dict)
+    generate_detectables_json(detectables=detectables_dict, base_images_dir=base_images_dir)
