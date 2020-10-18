@@ -333,3 +333,20 @@ def cv_generate_recognizer(algorithm, threshold=None):
     else:
         print("WARNING: face algorithm must be LBPH, Fisher or Eigen (1-3). See config.py.")
         return None
+
+
+def generate_detectables_json(detectables, base_images_dir=BASE_CAPTURE_DIRECTORY):
+    # Create a JSON file with labels and associated id
+    detectables_json = os.path.join(base_images_dir, 'detectables.json')
+    if DEBUG is True:
+        print('Going to create detectables file [%s]' % detectables_json)
+
+    fp = open(detectables_json, 'wt')
+    fp.write(json.dumps(detectables))
+    fp.close()
+
+
+def load_detectables_json(base_images_dir=BASE_CAPTURE_DIRECTORY):
+    detectables_json = os.path.join(base_images_dir, 'detectables.json')
+    with open(detectables_json, 'rt') as fp:
+        return json.load(fp=fp)
