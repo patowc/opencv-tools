@@ -6,34 +6,33 @@ from .config import *
 from .globals import *
 
 
-def cv_detect_person(frame, person_cascade, recognizer, font_face=cv2.FONT_HERSHEY_SIMPLEX):
+def cv_detect_person(frame, person_cascade, recognizer,
+                     images_dir=BASE_CAPTURE_DIRECTORY,
+                     font_face=cv2.FONT_HERSHEY_SIMPLEX):
     persons = person_cascade.detectMultiScale(frame, 1.15, 4)
     distance = 0
 
+    detectables = load_detectables_json(base_images_dir=images_dir)
+    if DEBUG is True:
+        print('Detectables=[%s]' % str(detectables))
+
     for (x, y, w, h) in persons:
+        face_str = 'unknown'
         equalized_frame = cv2.equalizeHist(frame)
 
         face_id, distance = recognizer.predict(equalized_frame[y:y + h, x:x + w])
         if distance:
             cv2.rectangle(frame, (x, y), (x + w, y + h), color=(0, 255, 0), thickness=2)
 
-            print('Face ID detected [%d]' % face_id)
-            print('Face conf detected [%s]' % distance)
+            if DEBUG is True:
+                print('Face ID detected [%d]' % face_id)
+                print('Face conf detected [%s]' % distance)
 
             if distance < DISTANCE_LIMIT:
-                if face_id == 1:  # CAREFUL with distance.
-                    face_id = u"Roman"
-                elif face_id == 2:  # CAREFUL with distance.
-                    face_id = u"Roman2"
-                elif face_id == 4:  # CAREFUL with distance.
-                    face_id = u"Arantxa"
-                elif face_id == 3:  # CAREFUL with distance.
-                    face_id = u"Erika"
-                else:
-                    face_id = "Unknown"
-            else:
-                face_id = "Unknown"
-            cv2.putText(frame, str(face_id), (x, y - 5), font_face, 2, (255, 0, 0), 2)
+                for k, v in detectables.items():
+                    if v == face_id:
+                        face_str = k
+            cv2.putText(frame, face_str, (x, y - 5), font_face, 2, (255, 0, 0), 2)
 
     return frame, distance
 
@@ -98,7 +97,8 @@ def cv_recognize(images_dir=BASE_CAPTURE_DIRECTORY,
 
         detected, distance = cv_detect_person(person_cascade=person_cascade,
                                               frame=gray_frame,
-                                              recognizer=recognizer)
+                                              recognizer=recognizer,
+                                              images_dir=images_dir)
 
         if distance > max_distance:
             max_distance = distance
