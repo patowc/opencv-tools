@@ -20,6 +20,7 @@ def do_capture(user,
     cap = None
     camera = None
     face_cascade = None
+    eye_cascade = None
     last_user_id = 0
 
     images_dir = os.path.join(base_images_dir, user)
@@ -56,11 +57,18 @@ def do_capture(user,
             sys.exit(ERROR_PICAMERA_IMPORT_ERROR_IN_RPI)
 
         camera.resolution = (640, 480)
-        face_cascade = cv2.CascadeClassifier(
-            '/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_default.xml')
+        # If not RPI, these are typical locations of the Haar Cascade
+        # person_cascade = cv2.CascadeClassifier('/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_default.xml')
+        # person_cascade = cv2.CascadeClassifier('/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_alt.xml')
+        person_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
     else:
         cap = cv2.VideoCapture(device_id)
-        face_cascade = cv2.CascadeClassifier('/usr/share/opencv4/haarcascades/haarcascade_frontalface_alt.xml')
+        # If RPI, these are typical locations of the Haar Cascade
+        # person_cascade = cv2.CascadeClassifier('/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml')
+        # person_cascade = cv2.CascadeClassifier('/usr/share/opencv4/haarcascades/haarcascade_frontalface_alt.xml')
+        person_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
 
     image_save_count = 0
     while True:
